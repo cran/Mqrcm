@@ -83,8 +83,7 @@ An object of class \dQuote{\code{iMqr}}, a list containing the following items:
 \item{call}{the matched call.}
 \item{converged}{logical. The convergence status.}
 \item{n.it}{the number of iterations.}
-\item{obj.function}{the value of the minimized integrated loss function, which does not include the terms that are
-only associated with the scale parameter \code{sigma}.}
+\item{obj.function}{the value of the minimized integrated loss function.}
 \item{s}{the used \sQuote{\kbd{s}} matrix.}
 \item{psi}{the used \sQuote{\code{psi}} function.}
 \item{covar}{the estimated covariance matrix.}
@@ -100,12 +99,12 @@ The generic accessory functions \code{coefficients}, \code{formula}, \code{terms
 \code{model.matrix}, \code{vcov} are available to extract information from the fitted model.
 }
 \references{
-Frumento, P., Salvati, N. (2018). \emph{Parametric modeling of M-quantile regression coefficient functions with application to small area estimation} [forthcoming].
+Frumento, P., and Salvati, N. (2020). \emph{Parametric modelling of M-quantile regression coefficient functions with application to small area estimation}. Journal of the Royal Statistical Society, Series A, 183(1), 229-250.
 
 Bianchi, et al. (2018). \emph{Estimation and testing in M-quantile regression with application to small area estimation}, International Statistical Review, 0(0), p. 1-30.
 }
 \author{
-Paolo Frumento \email{paolo.frumento@ki.se}
+Paolo Frumento \email{paolo.frumento@unipi.it}
 }
 
 \seealso{
@@ -171,7 +170,7 @@ to be a piecewise linear function and a shifted Legendre polynomial basis, respe
   # I would like to exclude log(p) from beta0(p), and qnorm(p) from beta1(p)
   # I set to 0 the corresponding entries of 's'
 
-  s <- matrix(1,2,3); s[1,3] <- s[2,2] <- 0
+  s <- rbind(c(1,1,0),c(1,0,1))
   iMqr(y ~ x, formula.p = ~ I(qnorm(p)) + I(log(p)), s = s)
   }
 }

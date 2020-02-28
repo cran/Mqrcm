@@ -51,7 +51,7 @@ order of the quantile. See \sQuote{Examples}.}
 \item{call}{the matched call.}
 }
 \author{
-Paolo Frumento \email{paolo.frumento@ki.se}
+Paolo Frumento \email{paolo.frumento@unipi.it}
 }
 \seealso{
 \code{\link{iMqr}}, for model fitting; \code{\link{predict.iMqr}} and \code{\link{plot.iMqr}},

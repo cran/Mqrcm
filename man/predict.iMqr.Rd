@@ -63,7 +63,7 @@ a list of two data frames, \kbd{fit} (predictions) and \kbd{se.fit} (standard er
 \item if \kbd{type = "sim"}, a vector of simulated data.
 }}
 \author{
-Paolo Frumento \email{paolo.frumento@ki.se}
+Paolo Frumento \email{paolo.frumento@unipi.it}
 }
 \note{
 Prediction may generate quantile crossing

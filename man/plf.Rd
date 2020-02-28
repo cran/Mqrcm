@@ -33,7 +33,7 @@ Any linear combination of the basis matrix is a piecewise linear function where
 each coefficient represents the slope in the corresponding sub-interval (see \sQuote{Examples}). 
 }
 \author{
-Paolo Frumento \email{paolo.frumento@ki.se}
+Paolo Frumento \email{paolo.frumento@unipi.it}
 }
 \note{
 This function is typically used within a call to \code{\link{iMqr}}.

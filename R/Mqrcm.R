@@ -2,7 +2,7 @@
 #' @importFrom stats approxfun sd prcomp lm.wfit pchisq printCoefmat .getXlevels pchisq runif vcov nobs predict pbeta qbeta qexp
 #' @importFrom graphics plot points abline polygon
 #' @importFrom grDevices adjustcolor
-#' @importFrom utils menu setTxtProgressBar txtProgressBar tail
+#' @importFrom utils menu setTxtProgressBar txtProgressBar tail getFromNamespace
 #' @importFrom Hmisc wtd.quantile
 #' @import pch
 
@@ -160,9 +160,6 @@ check.in <- function(mf, formula.p, s, plim){
 	varsX <- which(sX > 0); zeroX <- which(sX == 0 & mX == 0)
 	sX[constX] <- X[1,constX]; mX[constX] <- 0; sX[zeroX] <- 1
 	if(length(constX) > 1){zeroX <- c(zeroX, constX[-1]); constX <- constX[1]}
-
-#sX <- sX - sX + 1
-#mX <- mX*0	
 	
 	if(!use.slp){
 		sB <- apply(B3,2,sd); mB <- colMeans(B3)
@@ -177,8 +174,7 @@ check.in <- function(mf, formula.p, s, plim){
 		if(intB){constB <- 1; varsB <- 2:k}
 		else{constB <- integer(0); varsB <- 1:k}
 	}
-#sB <- sB - sB + 1
-#mB <- mB*0
+
 	if(all(s[, varsB] == 0)){stop("the M-quantile function must depend on p (wrong specification of 's')")}
 	if(!(theta00 <- ((intX & intB) && s[constX, constB] == 1)))
 		{my <- 0; My <- sd(y)*5; mX <- rep.int(0,q)}
@@ -205,8 +201,7 @@ check.in <- function(mf, formula.p, s, plim){
 	attr(bfun, "p") <- p2
 
 	# first scaling of x, b(p), y
-#my <- 0
-#My <- 10
+
 	U <- list(X = X, y = y)
 	X <- scale(X, center = mX, scale = sX)
 	y <- (y - my)/(My - my)*10
@@ -222,7 +217,7 @@ check.in <- function(mf, formula.p, s, plim){
 		for(j in unique(uX)){
 			sel <- which(uX == j)
 			if(intX){sel <- sel[sel != constX]}
-			if(length(sel) > 1 && X_in[sel[1]] != 0){ # & 1 == 2){ ############ OCCHIOOOOO ####################
+			if(length(sel) > 1 && X_in[sel[1]] != 0){
 				PC <- prcomp(X[,sel], center = FALSE, scale. = FALSE)
 				X[,sel] <- PC$x
 				rotX[sel,sel] <- PC$rotation
@@ -230,8 +225,6 @@ check.in <- function(mf, formula.p, s, plim){
 		}
 		MX <- colMeans(X); MX[mX == 0] <- 0
 		SX <- apply(X,2,sd); SX[constX] <- 1; SX[zeroX] <- 1
-#SX <- SX - SX + 1
-#MX <- MX*0
 		X <- scale(X, center = MX, scale = SX)
 	}
 
@@ -243,7 +236,7 @@ check.in <- function(mf, formula.p, s, plim){
 		for(j in unique(uB)){
 			sel <- which(uB == j)
 			if(intB){sel <- sel[sel != constB]}
-			if(length(sel) > 1 && B_in[sel[1]] != 0){ # & 1 == 2){ ############ OCCHIOOOOO
+			if(length(sel) > 1 && B_in[sel[1]] != 0){
 				PC <- prcomp(B3[,sel], center = FALSE, scale. = FALSE)
 				B3[,sel] <- PC$x
 				rotB[sel,sel] <- PC$rotation
@@ -251,8 +244,6 @@ check.in <- function(mf, formula.p, s, plim){
 		}
 		MB <- colMeans(B3); MB[mB == 0] <- 0
 		SB <- apply(B3,2,sd); SB[constB] <- 1
-#SB <- SB - SB + 1
-#MB <- MB*0
 		B3 <- scale(B3, center = MB, scale = SB)
 	}
 
@@ -457,7 +448,8 @@ iMqr.internal <- function(mf,cl, formula.p, tol = 1e-6, maxit, s, psi, plim){
 	v <- (S$y$M - S$y$m)/10
 	fit <- list(coefficients = out$theta, plim = plim, #sigma = sigma*v, 
 		call = cl, converged = (i < maxit), n.it = i,
-		obj.function = fit$L*v, s = s, psi = psi$psi_name,
+		obj.function = fit$L*v + length(V$y)*bfun$deltap*sum(log(sigma) + log(v)), 
+		s = s, psi = psi$psi_name,
 		covar = out$covar, mf = mf)
 	jnames <- c(sapply(attr(A$bfun, "coef.names"), 
 		function(x,y){paste(x,y, sep = ":")}, y = S$X$coef.names))
@@ -469,9 +461,9 @@ iMqr.internal <- function(mf,cl, formula.p, tol = 1e-6, maxit, s, psi, plim){
 	fit$CDF <- p.bisec(fit$coef,U$y,U$X,A$bfun)
 	b1 <- apply_bfun(A$bfun, fit$CDF, "b1fun")
 	fit$PDF <- 1/c(rowSums((U$X%*%fit$coef)*b1))
-	fit$PDF[attr(fit$CDF, "out")] <- 0
+	if(any(fit$PDF < 0)){warning("crossing M-quantiles detected (PDF < 0 at some y)")}
+	# fit$PDF[attr(fit$CDF, "out")] <- 0 # removed in v1.1
 	attributes(fit$CDF) <- attributes(fit$PDF) <- list(names = rownames(mf))
-	if(any(fit$PDF < 0)){warning("quantile crossing detected (PDF < 0 at some y)")}
 
 	# finish
 
@@ -588,7 +580,7 @@ plf <- function(p, knots){ # basis of piecewise linear function
 	ind2 <- NULL
 	for(j in knots){ind1 <- cbind(ind1, (p > j))}
 	for(j in k:1){ind2 <- cbind(ind2, ind1[,j] - ind1[,j+1])}
-	ind2 <- cbind(ind1[,k+1], ind2)[,(k + 1):1]
+	ind2 <- cbind(ind1[,k+1], ind2)[,(k + 1):1, drop = FALSE]
 	ind1 <- cbind(ind1,0)
 	knots <- c(0,knots,1)
 	a <- NULL
@@ -686,7 +678,8 @@ sortH <- function(H){
   HH
 }
 
-# Note: the loss does not include the part with sigma, n*sum(log(sigma))*dtau
+# Note: the loss does not include the part with sigma, n*sum(log(sigma))*dtau 
+# [which is added later in the main function!]
 iobjfun <- function(theta, y,X,Xw,weights, bfun, psi, sigma, u, H = FALSE, i = FALSE){
   
   tau <- bfun$p
@@ -822,6 +815,7 @@ iMqr.newton <- function(theta, y,X,Xw, weights, bfun,psi, s,sigma,
   eps <- 0.1
   G <- iobjfun(theta, y,X,Xw,weights, bfun, psi, sigma, LL$u, H = TRUE)
   g <- G$G[s]; h <- G$H[s,s, drop = FALSE]
+  h <- h + diag(0.0001, nrow(h)) # added in version 1.1
 
   for(i in 1:maxit){
    
@@ -830,7 +824,7 @@ iMqr.newton <- function(theta, y,X,Xw, weights, bfun,psi, s,sigma,
     ####
     
     H1 <- try(chol(h), silent = TRUE)
-    err <- (class(H1) == "try-error")
+    err <- inherits(H1, "try-error")
     
     if(!err){
       if(alg == "gs"){alg <- "nr"; eps <- 1}
@@ -876,9 +870,12 @@ start.theta <- function(y,x, weights, bfun, df, yy, s){
 
 	if(is.null(yy)){p.star <- (rank(y) - 0.5)/length(y)}
 	else{
-	  m0 <- suppressWarnings(pch:::pch.fit(y = yy,  
+	  pch.fit <- getFromNamespace("pch.fit", ns = "pch")
+	  predF.pch <- getFromNamespace("predF.pch", ns = "pch")
+	  
+	  m0 <- suppressWarnings(pch.fit(y = yy,  
 		x = cbind(1,x), w = weights, breaks = df))
-	  p.star <- 1 - pch:::predF.pch(m0)[,3]
+	  p.star <- 1 - predF.pch(m0)[,3]
 	}
 
 	pfun <- attr(bfun, "pfun")
@@ -1148,6 +1145,7 @@ predict.iMqr <- function(object, type = c("beta", "CDF", "QF", "sim"), newdata, 
 	miss <- attr(mf, "na.action")
 	nomiss <- (if(is.null(miss)) 1:nrow(mf) else (1:(nrow(mf) + length(miss)))[-miss])
 	xlev <- .getXlevels(mt, mf)
+	contr <- attr(mf, "contrasts")
 
 	if(!missing(newdata)){
 
@@ -1179,8 +1177,8 @@ predict.iMqr <- function(object, type = c("beta", "CDF", "QF", "sim"), newdata, 
 		miss <- attr(mf, "na.action")
 		nomiss <- (if(is.null(miss)) 1:nrow(mf) else (1:nrow(newdata))[-miss])
 	}
-
-	x <- model.matrix(mt, mf)
+	
+	x <- model.matrix(mt, mf, contrasts.arg = contr)
 
 	if(type == "CDF"){
 		bfun <- attr(object$mf, "bfun")

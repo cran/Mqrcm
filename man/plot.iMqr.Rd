@@ -37,7 +37,7 @@ combination of known parametric functions of \eqn{p}. With this command, a plot 
 \eqn{\beta(p)} versus \eqn{p} is created.
 }
 \author{
-Paolo Frumento \email{paolo.frumento@ki.se}
+Paolo Frumento \email{paolo.frumento@unipi.it}
 }
 \seealso{
 \code{\link{iMqr}} for model fitting; \code{\link{summary.iMqr}} and \code{\link{predict.iMqr}}

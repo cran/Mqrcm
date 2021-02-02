@@ -4,7 +4,7 @@
 M-Quantile Regression Coefficients Modeling
 }
 \description{
-This function implements Frumento and Salvati's (2018) method for M-quantile regression
+This function implements Frumento and Salvati's (2020) method for M-quantile regression
 coefficients modeling (Mqrcm). M-quantile regression coefficients are described
 by parametric functions of the order of the quantile.
 }
@@ -99,7 +99,7 @@ The generic accessory functions \code{coefficients}, \code{formula}, \code{terms
 \code{model.matrix}, \code{vcov} are available to extract information from the fitted model.
 }
 \references{
-Frumento, P., and Salvati, N. (2020). \emph{Parametric modelling of M-quantile regression coefficient functions with application to small area estimation}. Journal of the Royal Statistical Society, Series A, 183(1), 229-250.
+Frumento, P., Salvati, N. (2020). \emph{Parametric modeling of M-quantile regression coefficient functions with application to small area estimation}, Journal of the Royal Statistical Society, Series A, 183(1), p. 229-250.
 
 Bianchi, et al. (2018). \emph{Estimation and testing in M-quantile regression with application to small area estimation}, International Statistical Review, 0(0), p. 1-30.
 }

@@ -5,7 +5,7 @@
 M-Quantile Regression Coefficients Modeling
 }
 \description{
-This package implements Frumento and Salvati (2018) method for M-quantile regression
+This package implements Frumento and Salvati (2020) method for M-quantile regression
 coefficients modeling (Mqrcm), in which M-quantile regression coefficients are described
 by (flexible) parametric functions of the order of the quantile. This permits modeling
 the entire conditional M-quantile function of a response variable. 
@@ -14,8 +14,8 @@ the entire conditional M-quantile function of a response variable.
 \tabular{ll}{
 Package: \tab Mqrcm\cr
 Type: \tab Package\cr
-Version: \tab 1.1\cr
-Date: \tab 2020-02-26\cr
+Version: \tab 1.2\cr
+Date: \tab 2021-01-29\cr
 License: \tab GPL-2\cr
 }
 The function \code{\link{iMqr}} permits specifying the regression model.
@@ -29,7 +29,7 @@ Paolo Frumento
 Maintainer: Paolo Frumento <paolo.frumento@unipi.it>
 }
 \references{
-Frumento, P., and Salvati, N. (2020). \emph{Parametric modelling of M-quantile regression coefficient functions with application to small area estimation}. Journal of the Royal Statistical Society, Series A, 183(1), 229-250.
+Frumento, P., Salvati, N. (2020). \emph{Parametric modeling of M-quantile regression coefficient functions with application to small area estimation}, Journal of the Royal Statistical Society, Series A, 183(1), p. 229-250.
 }
 
 \keyword{ package }

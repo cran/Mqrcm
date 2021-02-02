@@ -6,7 +6,6 @@
 #' @importFrom Hmisc wtd.quantile
 #' @import pch
 
-
 #' @export
 iMqr <- function(formula, formula.p = ~ slp(p,3), weights, data, s, psi = "Huber", plim = c(0,1), tol = 1e-6, maxit){
 	cl <- match.call()
@@ -160,6 +159,9 @@ check.in <- function(mf, formula.p, s, plim){
 	varsX <- which(sX > 0); zeroX <- which(sX == 0 & mX == 0)
 	sX[constX] <- X[1,constX]; mX[constX] <- 0; sX[zeroX] <- 1
 	if(length(constX) > 1){zeroX <- c(zeroX, constX[-1]); constX <- constX[1]}
+
+#sX <- sX - sX + 1
+#mX <- mX*0	
 	
 	if(!use.slp){
 		sB <- apply(B3,2,sd); mB <- colMeans(B3)
@@ -174,7 +176,8 @@ check.in <- function(mf, formula.p, s, plim){
 		if(intB){constB <- 1; varsB <- 2:k}
 		else{constB <- integer(0); varsB <- 1:k}
 	}
-
+#sB <- sB - sB + 1
+#mB <- mB*0
 	if(all(s[, varsB] == 0)){stop("the M-quantile function must depend on p (wrong specification of 's')")}
 	if(!(theta00 <- ((intX & intB) && s[constX, constB] == 1)))
 		{my <- 0; My <- sd(y)*5; mX <- rep.int(0,q)}
@@ -201,7 +204,8 @@ check.in <- function(mf, formula.p, s, plim){
 	attr(bfun, "p") <- p2
 
 	# first scaling of x, b(p), y
-
+#my <- 0
+#My <- 10
 	U <- list(X = X, y = y)
 	X <- scale(X, center = mX, scale = sX)
 	y <- (y - my)/(My - my)*10
@@ -217,7 +221,7 @@ check.in <- function(mf, formula.p, s, plim){
 		for(j in unique(uX)){
 			sel <- which(uX == j)
 			if(intX){sel <- sel[sel != constX]}
-			if(length(sel) > 1 && X_in[sel[1]] != 0){
+			if(length(sel) > 1 && X_in[sel[1]] != 0){ # & 1 == 2){ ############ OCCHIOOOOO ####################
 				PC <- prcomp(X[,sel], center = FALSE, scale. = FALSE)
 				X[,sel] <- PC$x
 				rotX[sel,sel] <- PC$rotation
@@ -225,6 +229,8 @@ check.in <- function(mf, formula.p, s, plim){
 		}
 		MX <- colMeans(X); MX[mX == 0] <- 0
 		SX <- apply(X,2,sd); SX[constX] <- 1; SX[zeroX] <- 1
+#SX <- SX - SX + 1
+#MX <- MX*0
 		X <- scale(X, center = MX, scale = SX)
 	}
 
@@ -236,7 +242,7 @@ check.in <- function(mf, formula.p, s, plim){
 		for(j in unique(uB)){
 			sel <- which(uB == j)
 			if(intB){sel <- sel[sel != constB]}
-			if(length(sel) > 1 && B_in[sel[1]] != 0){
+			if(length(sel) > 1 && B_in[sel[1]] != 0){ # & 1 == 2){ ############ OCCHIOOOOO
 				PC <- prcomp(B3[,sel], center = FALSE, scale. = FALSE)
 				B3[,sel] <- PC$x
 				rotB[sel,sel] <- PC$rotation
@@ -244,6 +250,8 @@ check.in <- function(mf, formula.p, s, plim){
 		}
 		MB <- colMeans(B3); MB[mB == 0] <- 0
 		SB <- apply(B3,2,sd); SB[constB] <- 1
+#SB <- SB - SB + 1
+#MB <- MB*0
 		B3 <- scale(B3, center = MB, scale = SB)
 	}
 
@@ -493,7 +501,7 @@ apply_bfun <- function(bfun, p, fun = c("bfun", "b1fun")){
   k <- attr(bfun, "k")
   n <- length(p)
   
-  if(class(bfun) == "slp.basis"){
+  if(inherits(bfun, "slp.basis")){
     pp <- matrix(, n, k + 1)
     pp[,1] <- 1; pp[,2] <- p
     if(k > 1){for(j in 2:k){pp[,j + 1] <- pp[,j]*p}}
@@ -678,8 +686,7 @@ sortH <- function(H){
   HH
 }
 
-# Note: the loss does not include the part with sigma, n*sum(log(sigma))*dtau 
-# [which is added later in the main function!]
+# Note: the loss does not include the part with sigma, n*sum(log(sigma))*dtau
 iobjfun <- function(theta, y,X,Xw,weights, bfun, psi, sigma, u, H = FALSE, i = FALSE){
   
   tau <- bfun$p
@@ -824,7 +831,7 @@ iMqr.newton <- function(theta, y,X,Xw, weights, bfun,psi, s,sigma,
     ####
     
     H1 <- try(chol(h), silent = TRUE)
-    err <- inherits(H1, "try-error")
+    err <- (inherits(H1, "try-error"))
     
     if(!err){
       if(alg == "gs"){alg <- "nr"; eps <- 1}
@@ -870,10 +877,9 @@ start.theta <- function(y,x, weights, bfun, df, yy, s){
 
 	if(is.null(yy)){p.star <- (rank(y) - 0.5)/length(y)}
 	else{
-	  pch.fit <- getFromNamespace("pch.fit", ns = "pch")
+	  pch.fit.ct <- getFromNamespace("pch.fit.ct", ns = "pch")
 	  predF.pch <- getFromNamespace("predF.pch", ns = "pch")
-	  
-	  m0 <- suppressWarnings(pch.fit(y = yy,  
+	  m0 <- suppressWarnings(pch.fit.ct(y = yy,  
 		x = cbind(1,x), w = weights, breaks = df))
 	  p.star <- 1 - predF.pch(m0)[,3]
 	}

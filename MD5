@@ -1,10 +1,10 @@
-42352ebbd125a252db0eb2c3724f231f *DESCRIPTION
+fb889af09600b8f3c2c6a02e6a180ad4 *DESCRIPTION
 5b511aaa852d68cf8ad2f4bb5ae6ad33 *NAMESPACE
-c7274bb13c5c4327548508450f8ceb7c *NEWS.md
+3960943203c4165e6c79c98d440cf0c1 *NEWS.md
 b0cdd2ec110b09f88f3f2db269e66eef *R/Mqrcm.R
-fbe4aebeae5a601b4c321d7cf860f291 *man/Mqrcm-internal.Rd
-073ba68b247bf07661d49d8266a234f1 *man/Mqrcm-package.Rd
-15820ea9a67c1efd1d15a0e2e152bfbe *man/iMqr.Rd
+b0e65dff9cea61542eab8440f7151f37 *man/Mqrcm-internal.Rd
+a28a14a37e077659c279ad530f6290c2 *man/Mqrcm-package.Rd
+63904848ea5de9d0fb223286b962fd9f *man/iMqr.Rd
 678d514dee94abe232650790e3ddaa77 *man/plf.Rd
 bcbaa1109510cd0a07af7a58aa0df5d1 *man/plot.iMqr.Rd
 c3965b9da88a979239d89dfe7a0bb942 *man/predict.iMqr.Rd

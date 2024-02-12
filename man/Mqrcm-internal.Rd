@@ -1,5 +1,35 @@
 \name{internals}
 \alias{internals}
+
+\alias{check.in}
+\alias{check.out}
+\alias{start.theta}
+\alias{iMqr.internal}
+\alias{cov.theta}
+\alias{iobjfun}
+\alias{sortH}
+\alias{isigma}
+\alias{iMqr.newton}
+
+\alias{num.fun}
+\alias{make.bfun}
+\alias{apply_bfun}
+\alias{p.bisec}
+\alias{slp.basis}
+\alias{is.slp}
+
+\alias{iqr.waldtest}
+\alias{extract.p}
+\alias{pred.beta}
+
+
+\alias{print.iMqr}
+\alias{print.summary.iMqr}
+\alias{terms.iMqr}
+\alias{model.matrix.iMqr}
+\alias{vcov.iMqr}
+\alias{nobs.iMqr}
+
 \title{Internal Functions}
 \description{
 Functions for internal use only, or not yet documented.

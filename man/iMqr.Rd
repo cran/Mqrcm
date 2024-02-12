@@ -101,7 +101,7 @@ The generic accessory functions \code{coefficients}, \code{formula}, \code{terms
 \references{
 Frumento, P., Salvati, N. (2020). \emph{Parametric modeling of M-quantile regression coefficient functions with application to small area estimation}, Journal of the Royal Statistical Society, Series A, 183(1), p. 229-250.
 
-Bianchi, et al. (2018). \emph{Estimation and testing in M-quantile regression with application to small area estimation}, International Statistical Review, 0(0), p. 1-30.
+Bianchi, A., et al. (2018). \emph{Estimation and testing in M-quantile regression with application to small area estimation}, International Statistical Review, 0(0), p. 1-30.
 }
 \author{
 Paolo Frumento \email{paolo.frumento@unipi.it}

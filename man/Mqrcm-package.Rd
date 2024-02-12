@@ -14,8 +14,8 @@ the entire conditional M-quantile function of a response variable.
 \tabular{ll}{
 Package: \tab Mqrcm\cr
 Type: \tab Package\cr
-Version: \tab 1.2\cr
-Date: \tab 2021-01-29\cr
+Version: \tab 1.3\cr
+Date: \tab 2024-02-12\cr
 License: \tab GPL-2\cr
 }
 The function \code{\link{iMqr}} permits specifying the regression model.
